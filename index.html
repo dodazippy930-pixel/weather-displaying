@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+
+    <!-- Local CSS -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+
+<body>
+
+    <br>
+    <!-- Divs -->
+<div class="square">
+  <h1>Weather</h1>
+  <div class="spacer"></div>
+  <div class="spacer"></div>
+  
+    <div id="weather-info">
+    <p>Click the button to get the weather!</p>
+
+  </div>
+
+  <button onclick="getWeather()">Click me!</button>
+</div>
+
+<br>
+
+
+
+<script>
+const apiKey = 'ffac7a8336c4bef5ac3c652289af89b2'; 
+
+async function getWeather() {
+  const city = 'Huntersville, US'; 
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    const location = `${data.name}, ${data.sys.country}`;
+    const temp = `${data.main.temp.toFixed(1)}°F`; // shows 1 decimal
+
+
+    const condition = data.weather[0].main;
+    const wind = `${data.wind.speed} m/s`;
+
+    const icon = getWeatherIcon(condition); // optional helper
+    const html = `
+      <p>📍 ${location}</p>
+      <p>${icon} ${condition} — ${temp}</p>
+      <p>💨 Wind: ${wind}</p>
+    `;
+
+    document.getElementById('weather-info').innerHTML = html;
+
+  } catch (error) {
+    console.error('Failed to fetch weather:', error);
+    document.getElementById('weather-info').innerHTML = '<p>❌ Could not load weather.</p>';
+  }
+}
+
+
+function getWeatherIcon(condition) {
+  switch (condition.toLowerCase()) {
+    case 'clouds': return '☁️';
+    case 'rain': return '🌧️';
+    case 'clear': return '☀️';
+    case 'snow': return '❄️';
+    case 'thunderstorm': return '🌩️';
+    case 'drizzle': return '🌦️';
+    default: return '🌤️';
+}
+}
+</script>
+
+
+
+</body>
+</html>
