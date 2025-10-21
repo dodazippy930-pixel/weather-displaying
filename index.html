@@ -45,18 +45,31 @@ async function getWeather() {
     const response = await fetch(url);
     const data = await response.json();
 
+    // 🔍 Debugging logs
+    console.log("Weather API response:", data);
+    console.log("City:", data.name);
+    console.log("Temperature (°F):", data.main.temp);
+    console.log("Wind speed (mph):", data.wind.speed);
+    console.log("Weather condition:", data.weather[0].main);
+
     const location = `${data.name}, ${data.sys.country}`;
-    const temp = `${data.main.temp.toFixed(1)}°F`; // shows 1 decimal
-
-
+    const temp = `${data.main.temp.toFixed(1)}°F`;
     const condition = data.weather[0].main;
-    const wind = `${data.wind.speed} m/s`;
+    const wind = `${data.wind.speed} mph`;
+    const feellike = `${data.main.feels_like.toFixed(1)}°F`;
+    const humidity = `${data.main.humidity}%`;
+    const low = `${data.main.temp_min.toFixed(1)}°F`;
+    const high = `${data.main.temp_max.toFixed(1)}°F`;
 
-    const icon = getWeatherIcon(condition); // optional helper
+    const icon = getWeatherIcon(condition);
     const html = `
       <p>📍 ${location}</p>
       <p>${icon} ${condition} — ${temp}</p>
+      <p>😌 Feels Like: ${feellike}</p>
       <p>💨 Wind: ${wind}</p>
+      <p>💧 Humidity: ${humidity}</p>
+      <p>📉 Low: ${low}</p>
+      <p>📈 High: ${high}</p>
     `;
 
     document.getElementById('weather-info').innerHTML = html;
@@ -67,7 +80,6 @@ async function getWeather() {
   }
 }
 
-
 function getWeatherIcon(condition) {
   switch (condition.toLowerCase()) {
     case 'clouds': return '☁️';
@@ -77,11 +89,13 @@ function getWeatherIcon(condition) {
     case 'thunderstorm': return '🌩️';
     case 'drizzle': return '🌦️';
     default: return '🌤️';
-}
+  }
 }
 </script>
 
 
 
+
 </body>
 </html>
+
